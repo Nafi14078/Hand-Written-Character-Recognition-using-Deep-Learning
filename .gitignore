@@ -1,0 +1,14 @@
+# Ignore virtual environment and cache
+venv/
+__pycache__/
+*.pyc
+
+# Jupyter artifacts
+.ipynb_checkpoints/
+
+# Model weights and outputs
+saved_models/
+
+# System files
+.DS_Store
+Thumbs.db
