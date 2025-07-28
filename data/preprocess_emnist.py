@@ -1,37 +1,31 @@
-# data/preprocess_emnist.py
-
-import numpy as np
+# data/preprocess_emnist.py using tensorflow_datasets
 import tensorflow_datasets as tfds
-import matplotlib.pyplot as plt
+import numpy as np
 
+print("Loading EMNIST Letters from TensorFlow Datasets...")
+ds_train, ds_test = tfds.load(
+    'emnist/letters',
+    split=['train', 'test'],
+    as_supervised=True,
+    batch_size=-1
+)
 
-def load_emnist(split='letters'):
-    print(f" Loading EMNIST ({split}) from tensorflow_datasets...")
-    ds, info = tfds.load(f'emnist/{split}', split='train', with_info=True, as_supervised=True)
+# Convert full datasets to numpy
+x_train, y_train = tfds.as_numpy(ds_train)
+x_test, y_test = tfds.as_numpy(ds_test)
 
-    num_classes = info.features['label'].num_classes
-    print(f" Loaded {split} dataset with {num_classes} classes.")
+# Normalize images
+x_train = x_train.astype('float32') / 255.0
+x_test = x_test.astype('float32') / 255.0
 
-    # Convert dataset to NumPy arrays
-    X, y = [], []
-    for image, label in tfds.as_numpy(ds.take(1000)):  # limit to 1000 samples for quick preview
-        X.append(image)
-        y.append(label)
+# Reshape if needed
+x_train = x_train.reshape(-1, 28, 28, 1)
+x_test = x_test.reshape(-1, 28, 28, 1)
 
-    X = np.array(X)
-    y = np.array(y)
+# Labels are 1–26 → convert to 0–25
+y_train = y_train - 1
+y_test = y_test - 1
 
-    # Show a few samples
-    for i in range(5):
-        plt.subplot(1, 5, i + 1)
-        plt.imshow(X[i].squeeze(), cmap="gray")
-        plt.title(f"Label: {y[i]}")
-        plt.axis("off")
-    plt.suptitle(f"Sample EMNIST ({split}) Images")
-    plt.show()
-
-    return X, y
-
-
-if __name__ == "__main__":
-    load_emnist()
+# Save as .npz
+np.savez_compressed("data/emnist_letters.npz", x_train=x_train, y_train=y_train, x_test=x_test, y_test=y_test)
+print(" EMNIST dataset loaded and saved as emnist_letters.npz")

@@ -34,3 +34,9 @@ def preprocess_image(image_path):
     image = image.reshape(1, 28, 28, 1)
 
     return image
+
+
+def preprocess_image_raw(image):
+    image = 255 - image  # invert
+    image = image / 255.0
+    return image.reshape(1, 28, 28, 1)
