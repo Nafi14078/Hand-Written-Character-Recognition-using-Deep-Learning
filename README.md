@@ -1,4 +1,4 @@
-# ✍️ Handwritten Character Recognition using deep learning
+# ✍️ AlphaDigits -- Handwritten Character Recognition using deep learning
 
 This project focuses on using **Convolutional Neural Networks (CNN)** for recognizing handwritten characters and digits from image data.
 
@@ -97,6 +97,7 @@ python emnist_alphabet_recognition.py
 2.Add image augmentation to improve generalization
 
 3.Convert model to TensorFlow Lite for mobile deployment
+
 
 
 
